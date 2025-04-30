@@ -1,14 +1,39 @@
 #include "SpeakingRecursian.h"
 using namespace std;
 
-Vector<string> allRecursianWords(int numSyllables) {
-    /* TODO: Delete this comment and the next few lines, then implement
-     * this function.
-     */
-    (void) numSyllables;
-    return { };
+const string VOWELS = "eiu";
+const string CONSONANTS = "bknrs'";
+
+
+void recursianHelper(int syllablesLeft, bool isFirst, string soFar, Vector<string>& result) {
+    if (syllablesLeft == 0) {
+        result.add(soFar);
+        return;
+    }
+
+    if (isFirst) {
+        for (char vowel : VOWELS) {
+            recursianHelper(syllablesLeft - 1, false, soFar + vowel, result);
+        }
+    }
+
+    for (char consonant : CONSONANTS) {
+        for (char vowel : VOWELS) {
+            recursianHelper(syllablesLeft - 1, false, soFar + consonant + vowel, result);
+        }
+    }
 }
 
+
+Vector<string> allRecursianWords(int numSyllables) {
+    if (numSyllables < 0) {
+        error("Number of syllables cannot be negative!");
+    }
+
+    Vector<string> result;
+    recursianHelper(numSyllables, true, "", result);
+    return result;
+}
 
 /* * * * * Test Cases Below This Point * * * * */
 #include "GUI/SimpleTest.h"
